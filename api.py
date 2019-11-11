@@ -1,11 +1,11 @@
 from flask import request, json, Response, Blueprint
 from classes.users import Users, create_user, get_user, update_user, delete_user
 from classes.track import Track, create_track, get_track, update_track, delete_track
+from classes.spotify_helper import SpotifyAPI
 
 api_routes = Blueprint('api_routes', __name__)
 
 ### USER API ###
-
 @api_routes.route('/api/users', methods=['POST'])
 def user_post_handler():
 
@@ -102,3 +102,14 @@ def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
 def get_json_body_from_current_request():
     field_mappings = request.json
     return field_mappings
+
+
+### Spotify Redirect URI ###
+@api_routes.route('/api/spotify_callback', methods=['GET'])
+#TODO: how to make these function definitions?
+def handler():
+    # we get a code to exchange for access token
+    #TODO: parse the response query string for error and code?
+    code = 1
+    helper = SpotifyAPI()
+    helper.request_tokens(code)
