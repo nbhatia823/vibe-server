@@ -71,7 +71,7 @@ def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
     
     if request.method == 'GET':
         track_dict = get_track(track_id)
-        # if the user with given id exists, send it back as json;
+        # if the track with given id exists, send it back as json;
         if track_dict:
             track_json = json.dumps(track_dict)
             return Response(track_json,  
@@ -112,4 +112,4 @@ def handler():
     #TODO: parse the response query string for error and code?
     code = 1
     helper = SpotifyAPI()
-    helper.request_tokens(code)
+    helper.request_user_tokens(code)
