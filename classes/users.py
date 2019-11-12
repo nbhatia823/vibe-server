@@ -1,22 +1,21 @@
-from peewee import CharField, DecimalField
+from peewee import CharField
 from peewee_setup import BaseModel, db
 
-class User(BaseModel):
+class Users(BaseModel):
     user_id = CharField(primary_key=True)
     user_name = CharField()
     profile_pic_url = CharField()
-    sentiment_score = DecimalField()
     auth_token = CharField(null=True)
 
-db.create_tables([User])
+db.create_tables([Users])
 
 
 # Get a user as dict by id
 # Args: user_id (string/int of user_id)
 # Return: User as dictionary if found, None if not found
-def get_user(id):
+def get_user(user_id):
     try:
-        user_array = User.select().where(User.id == user_id).limit(1).dicts().execute()
+        user_array = Users.select().where(Users.user_id == user_id).limit(1).dicts().execute()
         return user_array[0]
     # in case of user not found or incorrect parameter user_id
     except:
@@ -25,9 +24,9 @@ def get_user(id):
 # Create a user with provided fields
 # Args: User_fields (dictionary- key = field, value = field_value)
 # Return: Number of rows created, -1 if error
-def create_user(user_fields):
+def create_user(user_field_mappings):
     try:
-        return User.insert(**user_fields).execute()
+        return Users.insert(**user_field_mappings).execute()
     # in case of incorrect user field mapping
     except:
         return -1 
@@ -36,10 +35,11 @@ def create_user(user_fields):
 # Updates user using field_mapping
 # Args: user_id (string/int of user_id), User_fields (dictionary- key = field, value = field_value)
 # Return: Number of rows updated, -1 if error
-def update_user(user_id, user_fields):
+def update_user(user_id, user_field_mappings):
     try:
-        return User.update(**field_mapping).where(User.user_id == user_id).execute()
+        return Users.update(**user_field_mappings).where(Users.user_id == user_id).execute()
     # in case of incorrect user field mapping
+    
     except:
         return -1
 
@@ -47,5 +47,5 @@ def update_user(user_id, user_fields):
 # Args: user_id (string/int of user_id)
 # Return: Number of rows deleted
 def delete_user(user_id):
-    return User.delete().where(User.user_id == user_id).execute()
+    return Users.delete().where(Users.user_id == user_id).execute()
 
