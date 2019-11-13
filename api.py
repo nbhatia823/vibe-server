@@ -8,7 +8,11 @@ api_routes = Blueprint('api_routes', __name__)
 ### USER API ###
 @api_routes.route('/api/users', methods=['POST'])
 def user_post_handler():
-
+    """
+    Creates a new user
+    Input: HTTP POST request with JSON body of parameters
+    Output: HTTP Response, status 201 if successful, 400 if failed
+    """
     if request.method == 'POST':
         print("attempting to post new request")
         user_field_mappings = get_json_body_from_current_request()

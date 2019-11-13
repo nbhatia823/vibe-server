@@ -11,10 +11,11 @@ class SpotifyAPI:
     redirect_uri = ''
     client_b64 = base64.encodestring(client_id+":"+client_secret)
 
-    """
-    Step 1: Request authorization from user to access data
-    """
     def register_user(self):
+        """
+        Step 1 of Spotify authentication flow:
+        Request authorization from user to access data
+        """
         url = 'https://accounts.spotify.com/authorize'
         # required parameters
         payload = {}
@@ -24,13 +25,12 @@ class SpotifyAPI:
         # TODO: could also add a cookie with payload['state'] for security
         requests.get(url, params=payload)
     
-    """
-    Step 2: Got callback from step 1
-    Either access denied (error) or
-    we get a code that we need to convert to tokens
-    """
     def request_user_tokens(self, code):
-        
+        """
+        Step 2: Got callback from step 1
+        Either access denied (error) or
+        we get a code that we need to convert to tokens
+        """
         url = 'https://accounts.spotify.com/api/token'
         headers = {'content-type': 'application/x-www-form-urlencoded',
         'Authorization': 'Authorization: Basic '+self.client_b64}
@@ -51,12 +51,12 @@ class SpotifyAPI:
         # TODO: put this access_token somewhere
         response['access_token']
 
-    """
-    https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
-    server to server authentication
-    can access info that isn't user specific
-    """
     def request_server_token(self):
+        """
+        https://developer.spotify.com/documentation/general/guides/authorization-guide/#client-credentials-flow
+        server to server authentication
+        can access info that isn't user specific
+        """
         url = 'https://accounts.spotify.com/api/token'
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         headers['Authorization'] = 'Authorization: Basic '+self.client_b64
