@@ -1,10 +1,14 @@
 import json
 import unittest
-from app import app # TODO: this doesn't import for some reason?
+from flask import Flask
+
+from app import app
 
 class TestApp(unittest.TestCase):
     """
     This class contains all the unit tests for this Flask app.
+    The tests generally consist of running sample requests against our
+    endpoints and validating the response payloads and status codes.
     http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
     """
 
@@ -21,6 +25,15 @@ class TestApp(unittest.TestCase):
         response = self.client.get(path="/")
         self.assertEqual(response.status_code, 200)
 
+class TestSpotifyAPI(unittest.TestCase):
+    """
+    This class runs unit tests for the Spotify API calls
+    """
+    def setUp(self):
+        self.spotify_helper = None
+    
+    def test_configured(self):
+        self.assertIsNotNone(self.spotify_helper.client_secret)
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,7 +1,7 @@
 """
 Executes queries on Spotify to collate search results
 """
-import spotify_helper
+from classes.spotify_helper import SpotifyAPI
 
 class Search:
     """Takes a string query
@@ -20,6 +20,6 @@ class Search:
     def findSongs(self, query):
         url = ''
         params = ''
-        results = spotify_helper.query(url, params)
+        results = SpotifyAPI.query(url, params)
         # TODO: find the spotify endpoint for this
         return results

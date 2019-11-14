@@ -7,11 +7,12 @@ import requests, os, base64
 
 class SpotifyAPI:
     client_id = 'CLIENT_ID'
-    client_secret = os.environ.get('SPOTIFY_SECRET')
+    client_secret = os.environ.get('SPOTIFY_SECRET') or 'invalid_key'
     redirect_uri = ''
     client_b64 = base64.encodestring(client_id+":"+client_secret)
 
-    def register_user(self):
+    @classmethod
+    def register_user(cls):
         """
         Step 1 of Spotify authentication flow:
         Request authorization from user to access data
