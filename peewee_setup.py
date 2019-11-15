@@ -12,7 +12,7 @@ db = PostgresqlDatabase(
     port=Config.PORT,
 )
 
-db.connect()
+#db.connect()
 
 # BaseModel needed for Peewee ORM models and connect to db_helper for all Pra.select() and other db calls
 class BaseModel(Model):

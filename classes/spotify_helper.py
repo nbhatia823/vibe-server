@@ -9,7 +9,7 @@ class SpotifyAPI:
     client_id = 'CLIENT_ID'
     client_secret = os.environ.get('SPOTIFY_SECRET') or 'invalid_key'
     redirect_uri = ''
-    client_b64 = base64.encodestring(client_id+":"+client_secret)
+    client_b64 = 1#   s base64.encodestring(client_id+":"+client_secret)
 
     @classmethod
     def register_user(cls):

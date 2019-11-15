@@ -48,4 +48,3 @@ def update_user(user_id, user_field_mappings):
 # Return: Number of rows deleted
 def delete_user(user_id):
     return Users.delete().where(Users.user_id == user_id).execute()
-
