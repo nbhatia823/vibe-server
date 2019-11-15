@@ -32,8 +32,8 @@ def user_get_or_update_or_delete_handler(user_id): # 'user_id' is string-type
         # if the user with given id exists, send it back as json
         if user_dict:
             user_json = json.dumps(user_dict)
-            return Response(user_json,  
-                        mimetype='application/json', 
+            return Response(user_json,
+                        mimetype='application/json',
                         status=200)
         # else if not found, return 404 code saying not found
         else:
@@ -47,7 +47,7 @@ def user_get_or_update_or_delete_handler(user_id): # 'user_id' is string-type
             return Response(status=204)
         else:
             return Response(status=400)
-    
+
     elif request.method == 'DELETE':
         rows_deleted = delete_user(user_id)
         if rows_deleted == 1:
@@ -72,19 +72,19 @@ def post_track_handler():
 @api_routes.route('/api/track/<track_id>', methods=['PUT', 'GET', 'DELETE'])
 def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
     print("received track request for id ", track_id)
-    
+
     if request.method == 'GET':
         track_dict = get_track(track_id)
         # if the track with given id exists, send it back as json;
         if track_dict:
             track_json = json.dumps(track_dict)
-            return Response(track_json,  
-                        mimetype='application/json', 
+            return Response(track_json,
+                        mimetype='application/json',
                         status=200)
         # else if not found, return 404 code saying not found
         else:
             return Response(status=404)
-    
+
     elif request.method == 'PUT':
         track_field_mappings = get_json_body_from_current_request()
         rows_updated = update_track(track_id, track_field_mappings)
@@ -92,7 +92,7 @@ def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
             return Response(status=204)
         else:
             return Response(status=400)
-    
+
     elif request.method == 'DELETE':
         rows_deleted = delete_track(track_id)
         if rows_deleted == 1:
@@ -101,7 +101,7 @@ def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
             return Response(status=400)
 
 
-# reads field_mappings from body of request and returns as a dictionary of field_name: field_value; 
+# reads field_mappings from body of request and returns as a dictionary of field_name: field_value;
 # must be a json-type header in request
 def get_json_body_from_current_request():
     field_mappings = request.json

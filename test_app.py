@@ -3,6 +3,23 @@ import unittest
 from flask import Flask
 
 from app import app
+from config import Config
+
+class TestConfigComplete(unittest.TestCase):
+    """
+    This class ensures that the config files are populated with a nonempty
+    string type to account for misconfiguration issues
+
+    """
+    def setUp(self):
+        self.config = Config()
+    def test_config_pairs(self):
+        self.assertTrue(isinstance(self.config.HOST, str))
+        self.assertTrue(isinstance(self.config.DATABASE, str))
+        self.assertTrue(isinstance(self.config.USERNAME, str))
+        self.assertTrue(isinstance(self.config.PASSWORD, str))
+        self.assertTrue(isinstance(self.config.PORT, str))
+
 
 class TestApp(unittest.TestCase):
     """
@@ -31,7 +48,7 @@ class TestSpotifyAPI(unittest.TestCase):
     """
     def setUp(self):
         self.spotify_helper = None
-    
+
     def test_configured(self):
         self.assertIsNotNone(self.spotify_helper.client_secret)
 
