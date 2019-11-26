@@ -25,6 +25,12 @@ def user_post_handler():
 
 @api_routes.route('/api/users/<user_id>', methods=['GET', 'PUT', 'DELETE'])
 def user_get_or_update_or_delete_handler(user_id): # 'user_id' is string-type
+    """
+    Gets, updates, or deletes an existing user
+    Input: HTTP GET. Output: JSON, status 200, or status 404
+    Input: HTTP POST. Output: 204 or 400.
+    Input: HTTP DELETE. Output: 204, or 400.
+    """
     print("received user request for id ", user_id)
     print("are types equal", (102123121111 == user_id), (user_id == "102123121111" ))
     if request.method == 'GET':
@@ -55,11 +61,14 @@ def user_get_or_update_or_delete_handler(user_id): # 'user_id' is string-type
         else:
             return Response(status=400)
 
-
 ### TRACK API ###
-
 @api_routes.route('/api/track', methods=['POST'])
 def post_track_handler():
+    """
+    Creates a new track
+    Input: POST
+    Output:  201 if created, 400 otherwise
+    """
     if request.method == 'POST':
         print("attempting to post new request")
         track_field_mappings = get_json_body_from_current_request()
@@ -71,6 +80,12 @@ def post_track_handler():
 
 @api_routes.route('/api/track/<track_id>', methods=['PUT', 'GET', 'DELETE'])
 def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
+    """
+    Get, update, or delete 
+    Input: PUT. Output: status 204 or 400.
+    Input: GET. Output: JSON + status 200. or status 404
+    Input: DELETE. Output: Status 204 or 400.
+    """
     print("received track request for id ", track_id)
     
     if request.method == 'GET':
@@ -99,6 +114,73 @@ def track_get_or_update_or_delete_handler(track_id): # 'id' is string-type ?
             return Response(status=204)
         else:
             return Response(status=400)
+
+### User Feed API ###
+@api_routes.route('/api/users/<user_id>/post/<track_id>', methods=['POST'])
+def post_track_of_day_handler(user_id, track_id):
+    """Posts the user's track of the day.
+    """
+    if request.method == 'POST':
+        print("User "+user_id+" posting "+track_id)
+        if get_user(user_id):
+            if get_track(track_id):
+                pass
+            else:
+                return Response(status=404)
+        else:
+            return Response(status=404)
+
+@api_routes.route('/api/users/<user_id>/post', methods=['DELETE'])
+def delete_track_of_day_handler(user_id):
+    """Remove the user's track of the day.
+    Input: HTTP delete
+    Output: Response 204 if deleted, or 400 if invalid.
+    """
+    if request.method == 'DELETE':
+        pass
+
+@api_routes.route('/api/users/<user_id>/post/history', methods=['GET'])
+def get_track_of_day_history_handler(user_id):
+    """
+    Get the history of tracks of the day posted by this user
+    """
+    if request.method == 'GET':
+        pass
+
+
+@api_routes.route('/api/users/<user_id>/feed', methods=['GET'])
+def get_user_feed_handler(user_id):
+    """Get the songs for a user's feed.
+    Input: HTTP GET with user_id
+    Output: Return the JSON dictionary of songs for the feed
+    """
+    if request.method == 'GET':
+        pass
+
+@api_routes.route('/api/users/<user_id>/history', methods=['GET'])
+def get_recently_played(user_id):
+    """
+    Get the recently played songs.
+    Input: HTTP GET, JSON = TODO: number? songs?
+    Output: JSON dictionary
+    """
+    if request.method == 'GET':
+        pass
+
+### Friends API ###
+@api_routes.route('/api/users/<user_id>/friends', methods=['POST'])
+def get_friend_list_handler(user_id):
+    """
+    Get the list of friend ids.
+    """
+    if request.method == 'POST':
+        pass
+
+@api_routes.route('/api/users/<user_id>/friends/<friend_id>', methods=['POST', 'DELETE'])
+def add_or_delete_friend_handler(user_id, track_id):
+    if request.method == 'POST':
+        pass
+
 
 
 # reads field_mappings from body of request and returns as a dictionary of field_name: field_value; 
