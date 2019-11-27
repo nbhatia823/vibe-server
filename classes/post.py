@@ -1,20 +1,25 @@
-from peewee import CharField
+from peewee import CharField, DateTimeField, CompositeKey
 from peewee_setup import BaseModel, db
 
-
-class Users(BaseModel):
-    user_id = CharField(primary_key=True)
-    user_name = CharField()
-    profile_pic_url = CharField()
-    auth_token = CharField(null=True)
+# NEED TO CONFIRM IF ALBUM ART URL RETURNED FROM SPOTIFY CAN BE USED BY FRONTEND
 
 
-db.create_tables([Users])
+class Post(BaseModel):
+    user_id = CharField()
+    date_posted = DateTimeField()
+    track_id = CharField()
 
+    class Meta:
+        primary_key = CompositeKey('user_id', 'time_posted')
+
+
+db.create_tables([Post])
 
 # Get a user as dict by id
 # Args: user_id (string/int of user_id)
 # Return: User as dictionary if found, None if not found
+
+
 def get_user(user_id):
     try:
         user_array = Users.select().where(
