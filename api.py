@@ -1,6 +1,7 @@
 from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
 from classes.track import Track, create_track, get_track, update_track, delete_track
+from classes.posts import Posts, get_post, create_post, delete_current_posts
 from search import Search
 import sys
 
@@ -92,7 +93,6 @@ def post_track_handler():
 @api_routes.route('/api/track/<track_id>', methods=['PUT', 'GET', 'DELETE'])
 def track_get_or_update_or_delete_handler(track_id):  # 'id' is string-type ?
     """
-
     Get, update, or delete 
     Input: PUT. Output: status 204 or 400.
     Input: GET. Output: JSON + status 200. or status 404
@@ -136,7 +136,11 @@ def post_track_of_day_handler(user_id, track_id):
         print("User "+user_id+" posting "+track_id)
         if get_user(user_id):
             if get_track(track_id):
-                pass
+                rows_updated = create_post({"user_id": user_id, "track_id": track_id, "date_posted": int(round(time.time()*1000))})
+                if rows_updated == -1:
+                    return Response(status=400)
+                else:
+                    return Response(status=200)
             else:
                 return Response(status=404)
         else:
@@ -150,7 +154,9 @@ def delete_track_of_day_handler(user_id):
     Output: Response 204 if deleted, or 400 if invalid.
     """
     if request.method == 'DELETE':
-        pass
+        if delete_current_posts(user_id) == -1:
+            return Response(status=400)
+        return Response(status=204)
 
 
 @api_routes.route('/api/users/<user_id>/post/history', methods=['GET'])
