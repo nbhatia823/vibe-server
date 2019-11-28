@@ -55,3 +55,9 @@ def update_user(user_id, user_field_mappings):
 
 def delete_user(user_id):
     return Users.delete().where(Users.user_id == user_id).execute()
+
+
+def search_users(query):
+    users = Users.select(Users.user_id, Users.user_name, Users.profile_pic_url).where(
+        Users.user_name.contains(query)).limit(4).dicts().execute()
+    return [user for user in users]
