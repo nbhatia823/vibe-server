@@ -13,10 +13,10 @@ def user_put_handler():
     Input: HTTP POST request with JSON body of parameters
     Output: HTTP Response, status 201 if successful, 400 if failed
     """
-
+    print("ATTEMPTING PUT REQUEST")
     if request.method == 'PUT':
         user_field_mappings = get_json_body_from_current_request()
-        print(user_field_mappings)
+        print("FIELD MAPPINGS", user_field_mappings)
         user_id = user_field_mappings["user_id"]
         if get_user(user_id) == None:
             # Create user
@@ -188,6 +188,7 @@ def add_or_delete_friend_handler(user_id, track_id):
 # reads field_mappings from body of request and returns as a dictionary of field_name: field_value;
 # must be a json-type header in request
 def get_json_body_from_current_request():
+    print(request)
     field_mappings = request.json
     return field_mappings
 
