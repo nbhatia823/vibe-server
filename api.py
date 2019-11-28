@@ -2,6 +2,7 @@ from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
 from classes.track import Track, create_track, get_track, update_track, delete_track
 from classes.spotify_helper import SpotifyAPI
+import sys
 
 api_routes = Blueprint('api_routes', __name__)
 
@@ -13,17 +14,20 @@ def user_put_handler():
     Input: HTTP POST request with JSON body of parameters
     Output: HTTP Response, status 201 if successful, 400 if failed
     """
-
+    print("ATTEMPTING PUT REQUEST")
+    sys.stdout.flush()
     if request.method == 'PUT':
         user_field_mappings = get_json_body_from_current_request()
-        print(user_field_mappings)
+        print("FIELD MAPPINGS", user_field_mappings)
+        sys.stdout.flush()
         user_id = user_field_mappings["user_id"]
         if get_user(user_id) == None:
             # Create user
             rows_updated = create_user(user_field_mappings)
         else:
             rows_updated = update_user(user_id, user_field_mappings)
-        print(rows_updated)
+        print("rows updated:", rows_updated)
+        sys.stdout.flush()
         if rows_updated == 1:
             return Response(status=204)
         else:
@@ -188,6 +192,8 @@ def add_or_delete_friend_handler(user_id, track_id):
 # reads field_mappings from body of request and returns as a dictionary of field_name: field_value;
 # must be a json-type header in request
 def get_json_body_from_current_request():
+    print("request is:\n", request)
+    sys.stdout.flush()
     field_mappings = request.json
     return field_mappings
 
