@@ -1,10 +1,24 @@
 from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
 from classes.track import Track, create_track, get_track, update_track, delete_track
-from classes.spotify_helper import SpotifyAPI
+from search import Search
 import sys
 
 api_routes = Blueprint('api_routes', __name__)
+
+### SEARCH API ###
+@api_routes.route('/api/search', methods=['GET'])
+def search_handler():
+    if request.method == 'GET':
+        print("reached")
+        query = request.args.get('q')
+        if query == None:
+            return Response(status=400)
+        else:
+            data = Search.search(query)
+            return Response(json.dumps(data),
+                            mimetype='application/json',
+                            status=200)
 
 ### USER API ###
 @api_routes.route('/api/users', methods=['PUT'])

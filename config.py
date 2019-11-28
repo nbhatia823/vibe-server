@@ -12,12 +12,20 @@ class Config:
     SPOTIFY_CLIENT_ID = '5ae1d35a487842fcbef9cb7f164ec3fb'
     SPOTIFY_CLIENT_SECRET = 'c27f32c0e5f04c2e989acc4c05097ba5'
     SPOTIFY_AUTH_TOKEN = ''
+    SPOTIFY_REQ_HEADERS = {
+        'accept': "application/json",
+        'content-type': "application/json",
+        'authorization': f'Bearer {SPOTIFY_AUTH_TOKEN}'
+    }
+    SPOTIFY_ACCOUNT_URL = 'https://accounts.spotify.com'
+    SPOTIFY_API_URL = "https://api.spotify.com"
 
     @staticmethod
     def setAuthToken():
-        url = "https://accounts.spotify.com/api/token"
+        url = f'{Config.SPOTIFY_ACCOUNT_URL}/api/token'
         body_params = {'grant_type': 'client_credentials'}
         authorization = (Config.SPOTIFY_CLIENT_ID,
                          Config.SPOTIFY_CLIENT_SECRET)
         resp = requests.post(url, data=body_params, auth=authorization)
         Config.SPOTIFY_AUTH_TOKEN = resp.json()["access_token"]
+        Config.SPOTIFY_REQ_HEADERS['authorization'] = f'Bearer {Config.SPOTIFY_AUTH_TOKEN}'

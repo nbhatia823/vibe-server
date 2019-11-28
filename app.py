@@ -1,6 +1,7 @@
 from flask import Flask, Blueprint
 from api import api_routes
 from config import Config
+from search import Search
 import threading
 
 app = Flask(__name__)
