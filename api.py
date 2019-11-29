@@ -246,7 +246,7 @@ def get_track_sentiment_handler(track_id):
             if track:
                 create_track(track)
             else:
-                # Not a valid track id, Bad Request
+                # Not a valid track id
                 return Response(status=404)
         # Limit fields sent back to requester
         track = {
@@ -261,7 +261,7 @@ def get_track_sentiment_handler(track_id):
 
 
 @api_routes.route('/api/sentiment/tracks', methods=['POST'])
-def get_tracks_sentiment_handlder():
+def get_tracks_sentiment_handler():
     if request.method == 'POST':
         try:
             body = get_json_body_from_current_request()
