@@ -4,10 +4,6 @@ from peewee_setup import BaseModel, db
 from classes.users import Users
 import time
 
-# NEED TO CONFIRM IF ALBUM ART URL RETURNED FROM SPOTIFY CAN BE USED BY FRONTEND
-
-NUM_MILLI_PER_DAY = 86400000
-
 
 class Friends(BaseModel):
     user_id = ForeignKeyField(Users)
@@ -18,8 +14,6 @@ class Friends(BaseModel):
 
 
 db.create_tables([Friends])
-
-# CREATES friend relationship both ways
 
 
 def get_friends(user_id):
@@ -33,6 +27,8 @@ def get_friends(user_id):
         return friends
     except:
         return None
+
+# CREATES friend relationship both ways
 
 
 def add_friend(user_id, friend_id):

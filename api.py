@@ -221,7 +221,7 @@ def get_friend_list_handler(user_id):
                             mimetype='application/json',
                             status=200)
         else:
-            return Response(status=400)
+            return Response(status=404)
 
 
 @api_routes.route('/api/users/<user_id>/friends/<friend_id>', methods=['POST', 'DELETE'])
@@ -230,12 +230,12 @@ def add_or_delete_friend_handler(user_id, friend_id):
         if add_friend(user_id, friend_id):
             return Response(status=201)
         else:
-            return Response(status=400)
+            return Response(status=404)
     elif request.method == 'DELETE':
         if delete_friend(user_id, friend_id):
             return Response(status=204)
         else:
-            return Response(status=400)
+            return Response(status=404)
 
 
 # reads field_mappings from body of request and returns as a dictionary of field_name: field_value;
