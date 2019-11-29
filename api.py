@@ -2,6 +2,7 @@ from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
 from classes.track import Track, create_track, get_track, update_track, delete_track
 from classes.user_posts import UserPosts, get_all_user_posts, get_current_user_posts, create_user_post, delete_current_user_posts
+from classes.friends import Friends, add_friend, delete_friend, get_friends
 from classes.search import Search
 from classes.spotify_helper import SpotifyHelper
 import sys
@@ -94,7 +95,7 @@ def post_track_handler():
 @api_routes.route('/api/track/<track_id>', methods=['PUT', 'GET', 'DELETE'])
 def track_get_or_update_or_delete_handler(track_id):  # 'id' is string-type ?
     """
-    Get, update, or delete 
+    Get, update, or delete
     Input: PUT. Output: status 204 or 400.
     Input: GET. Output: JSON + status 200. or status 404
     Input: DELETE. Output: Status 204 or 400.
@@ -208,19 +209,33 @@ def get_recently_played(user_id):
         pass
 
 ### FRIENDS API ###
-@api_routes.route('/api/users/<user_id>/friends', methods=['POST'])
+@api_routes.route('/api/users/<user_id>/friends', methods=['GET'])
 def get_friend_list_handler(user_id):
     """
     Get the list of friend ids.
     """
-    if request.method == 'POST':
-        pass
+    if request.method == 'GET':
+        friends_dicts = get_friends(user_id)
+        if friends_dicts != None:
+            return Response(json.dumps(friends_dicts),
+                            mimetype='application/json',
+                            status=200)
+        else:
+            return Response(status=400)
 
 
 @api_routes.route('/api/users/<user_id>/friends/<friend_id>', methods=['POST', 'DELETE'])
-def add_or_delete_friend_handler(user_id, track_id):
+def add_or_delete_friend_handler(user_id, friend_id):
     if request.method == 'POST':
-        pass
+        if add_friend(user_id, friend_id):
+            return Response(status=201)
+        else:
+            return Response(status=400)
+    elif request.method == 'DELETE':
+        if delete_friend(user_id, friend_id):
+            return Response(status=204)
+        else:
+            return Response(status=400)
 
 
 # reads field_mappings from body of request and returns as a dictionary of field_name: field_value;
