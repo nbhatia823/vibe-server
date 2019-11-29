@@ -247,7 +247,7 @@ def get_track_sentiment_handler(track_id):
                 create_track(track)
             else:
                 # Not a valid track id, Bad Request
-                return Response(status=400)
+                return Response(status=404)
         # Limit fields sent back to requester
         track = {
             "track_name": track["track_name"],
