@@ -31,8 +31,17 @@ def get_all_user_posts(user_id):
             Track.album_art,
             Track.sentiment_score
         ).join(Track).where(
-            UserPosts.user_id == user_id).dicts().execute()
-        posts = [post for post in posts]
+            UserPosts.user_id == user_id).order_by(UserPosts.date_posted.desc()).dicts().execute()
+        posts = [{
+            "date_posted": post["date_posted"],
+            "track": {
+                "track_id": post["track_id"],
+                "track_name": post["track_name"],
+                "artist_name": post["artist_name"],
+                "album_art": post["album_art"],
+                "sentiment_score": post["sentiment_score"]
+            }
+        } for post in posts]
         return posts
     except:
         return None
