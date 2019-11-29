@@ -1,8 +1,9 @@
 from flask import Flask, Blueprint
 from api import api_routes
 from config import Config
-from search import Search
+from classes.search import Search
 import threading
+from classes.spotify_helper import SpotifyHelper
 
 app = Flask(__name__)
 app.register_blueprint(api_routes)

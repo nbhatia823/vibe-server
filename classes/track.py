@@ -10,7 +10,7 @@ class Track(BaseModel):
     track_name = CharField()
     artist_name = CharField()
     album_art = JSONField()
-    sentiment_score = FloatField()
+    sentiment_score = FloatField(null=True)
 
 
 db.create_tables([Track])
