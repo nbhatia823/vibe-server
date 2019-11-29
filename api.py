@@ -1,6 +1,6 @@
 from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
-from classes.track import Track, create_track, get_track, update_track, delete_track
+from classes.track import Track, bulk_create_tracks, create_track, get_track, update_track, delete_track
 from classes.user_posts import UserPosts, get_all_user_posts, create_user_post, delete_current_user_posts, get_friends_posts
 from classes.friends import Friends, add_friend, delete_friend, get_friends
 from classes.search import Search
@@ -206,16 +206,6 @@ def get_user_feed_handler(user_id):
             return Response(status=400)
 
 
-@api_routes.route('/api/users/<user_id>/history', methods=['GET'])
-def get_recently_played(user_id):
-    """
-    Get the recently played songs.
-    Input: HTTP GET, JSON = TODO: number? songs?
-    Output: JSON dictionary
-    """
-    if request.method == 'GET':
-        pass
-
 ### FRIENDS API ###
 @api_routes.route('/api/users/<user_id>/friends', methods=['GET'])
 def get_friend_list_handler(user_id):
@@ -244,6 +234,64 @@ def add_or_delete_friend_handler(user_id, friend_id):
             return Response(status=204)
         else:
             return Response(status=404)
+
+
+### SENTIMENT API ###
+@api_routes.route('/api/sentiment/track/<track_id>', methods=['POST'])
+def get_track_sentiment_handler(track_id):
+    if request.method == 'POST':
+        track = get_track(track_id)
+        if not track:
+            track = SpotifyHelper.get_track_by_id(track_id)
+            if track:
+                create_track(track)
+            else:
+                # Not a valid track id, Bad Request
+                return Response(status=400)
+        # Limit fields sent back to requester
+        track = {
+            "track_name": track["track_name"],
+            "track_id": track["track_id"],
+            "artist_name": track["artist_name"],
+            "sentiment_score": track["sentiment_score"]
+        }
+        return Response(json.dumps(track),
+                        mimetype='application/json',
+                        status=200)
+
+
+@api_routes.route('/api/sentiment/tracks', methods=['POST'])
+def get_tracks_sentiment_handlder():
+    if request.method == 'POST':
+        try:
+            body = get_json_body_from_current_request()
+            tracks_for_resp = []
+            tracks_for_db = []
+            for track in body["items"]:
+                track_id = track["id"]
+                db_track = get_track(track_id)
+                if not db_track:
+                    db_track = {
+                        "track_name": track["name"],
+                        "artist_name": track["artists"][0]["name"],
+                        "track_id": track_id,
+                        "album_art": track["album"]["images"][0],
+                        "sentiment_score": SpotifyHelper.get_track_sentiment_score(track_id)
+                    }
+                    tracks_for_db.append(db_track)
+                # Return track without album art
+                tracks_for_resp.append({
+                    "track_name": db_track["track_name"],
+                    "track_id": db_track["track_id"],
+                    "artist_name": db_track["artist_name"],
+                    "sentiment_score": db_track["sentiment_score"]
+                })
+            bulk_create_tracks(tracks_for_db)
+            return Response(json.dumps(tracks_for_resp),
+                            mimetype='application/json',
+                            status=200)
+        except:
+            return Response(status=400)
 
 
 # reads field_mappings from body of request and returns as a dictionary of field_name: field_value;

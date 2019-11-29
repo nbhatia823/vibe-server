@@ -41,6 +41,17 @@ def create_track(track_field_mappings):
         return -1
 
 
+# Create tracks for each set of provided fields
+# Args: array of track_fields (dictionary- key = field, value = field_value)
+# Return: Number of rows created, -1 if error
+def bulk_create_tracks(track_field_mappings_array):
+    try:
+        with db.atomic():
+            Track.insert_many(track_field_mappings_array).execute()
+    except:
+        return -1
+
+
 # Updates track using field_mapping
 # Args: track_id (snt of track_id), track_fields (dictionary- key = field, value = field_value)
 # Return: Number of rows updated, -1 if error

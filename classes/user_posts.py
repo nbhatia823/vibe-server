@@ -5,8 +5,6 @@ from classes.users import Users
 from classes.friends import Friends
 import time
 
-# NEED TO CONFIRM IF ALBUM ART URL RETURNED FROM SPOTIFY CAN BE USED BY FRONTEND
-
 NUM_MILLI_PER_DAY = 86400000
 
 
@@ -104,8 +102,7 @@ def get_friends_posts(user_id):
             UserPosts.user_id.in_(friends)
         ).join(Users, on=UserPosts.user_id == Users.user_id
                ).join(Track, on=UserPosts.track_id == Track.track_id
-                      ).order_by(UserPosts.date_posted
-                                 ).limit(20).order_by(UserPosts.date_posted.desc()).dicts().execute()
+                      ).limit(20).order_by(UserPosts.date_posted.desc()).dicts().execute()
         posts = [{
             "date_posted": post["date_posted"],
             "user": {
