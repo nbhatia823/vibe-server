@@ -1,7 +1,7 @@
 from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
 from classes.track import Track, create_track, get_track, update_track, delete_track
-from classes.user_posts import UserPosts, get_all_user_posts, get_current_user_posts, create_user_post, delete_current_user_posts
+from classes.user_posts import UserPosts, get_all_user_posts, create_user_post, delete_current_user_posts, get_friends_posts
 from classes.friends import Friends, add_friend, delete_friend, get_friends
 from classes.search import Search
 from classes.spotify_helper import SpotifyHelper
@@ -129,7 +129,7 @@ def track_get_or_update_or_delete_handler(track_id):  # 'id' is string-type ?
             return Response(status=400)
 
 
-### USER FEED API ###
+### USER POSTS API ###
 @api_routes.route('/api/users/<user_id>/post/history', methods=['GET'])
 def get_track_of_day_history_handler(user_id):
     """
@@ -187,7 +187,7 @@ def delete_track_of_day_handler(user_id):
             return Response(status=400)
         return Response(status=204)
 
-
+### USER FEED API ###
 @api_routes.route('/api/users/<user_id>/feed', methods=['GET'])
 def get_user_feed_handler(user_id):
     """Get the songs for a user's feed.
@@ -195,7 +195,15 @@ def get_user_feed_handler(user_id):
     Output: Return the JSON dictionary of songs for the feed
     """
     if request.method == 'GET':
-        pass
+        if not get_user(user_id):
+            return Response(status=404)
+        friend_post_dicts = get_friends_posts(user_id)
+        if friend_post_dicts != None:
+            return Response(json.dumps(friend_post_dicts),
+                            mimetype='application/json',
+                            status=200)
+        else:
+            return Response(status=400)
 
 
 @api_routes.route('/api/users/<user_id>/history', methods=['GET'])

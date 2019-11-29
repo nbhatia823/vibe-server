@@ -2,6 +2,7 @@ from peewee import CharField, BigIntegerField, CompositeKey, ForeignKeyField
 from peewee_setup import BaseModel, db
 from classes.track import Track
 from classes.users import Users
+from classes.friends import Friends
 import time
 
 # NEED TO CONFIRM IF ALBUM ART URL RETURNED FROM SPOTIFY CAN BE USED BY FRONTEND
@@ -83,3 +84,43 @@ def delete_current_user_posts(user_id):
     return UserPosts.delete().where(
         UserPosts.user_id == user_id,
         UserPosts.date_posted > filter_time).execute()
+
+
+def get_friends_posts(user_id):
+    try:
+        friends = Friends.select(Friends.friend_id).where(
+            Friends.user_id == user_id)
+        friend_posts = UserPosts.select(
+            UserPosts.user_id,
+            Users.user_name,
+            Users.profile_pic_url,
+            UserPosts.date_posted,
+            Track.track_id,
+            Track.track_name,
+            Track.artist_name,
+            Track.album_art,
+            Track.sentiment_score
+        ).where(
+            UserPosts.user_id.in_(friends)
+        ).join(Users, on=UserPosts.user_id == Users.user_id
+               ).join(Track, on=UserPosts.track_id == Track.track_id
+                      ).order_by(UserPosts.date_posted
+                                 ).limit(20).order_by(UserPosts.date_posted.desc()).dicts().execute()
+        posts = [{
+            "date_posted": post["date_posted"],
+            "user": {
+                "user_id": post["user_id"],
+                "user_name": post["user_name"],
+                "profile_pic_url": post["profile_pic_url"],
+            },
+            "track": {
+                "track_id": post["track_id"],
+                "track_name": post["track_name"],
+                "artist_name": post["artist_name"],
+                "album_art": post["album_art"],
+                "sentiment_score": post["sentiment_score"]
+            }
+        } for post in friend_posts]
+        return posts
+    except:
+        return None
