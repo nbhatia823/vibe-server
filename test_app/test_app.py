@@ -9,13 +9,12 @@ sys.path.append(os.getcwd() + '/..')
 #hacky way to allow app import for unit testing
 from app import app
 
-
 class TestApp(unittest.TestCase):
     """
     This class contains all the unit tests for this Flask app.
     The tests generally consist of running sample requests against our
     endpoints and validating the response payloads and status codes.
-    http://www.patricksoftwareblog.com/unit-testing-a-flask-application/
+
     """
 
     def setUp(self):
@@ -36,10 +35,26 @@ class TestSpotifyAPI(unittest.TestCase):
     This class runs unit tests for the Spotify API calls
     """
     def setUp(self):
-        self.spotify_helper = None
+        from config import Config
+
+        self.config = Config()
+
 
     def test_configured(self):
-        self.assertIsNotNone(self.spotify_helper.client_secret)
+        self.assertIsNotNone(self.config.HOST)
+        self.assertIsNotNone(self.config.DATABASE)
+        self.assertIsNotNone(self.config.PASSWORD)
+        self.assertIsNotNone(self.config.PORT)
+        self.assertIsNotNone(self.config.SECRET_KEY)
+        self.assertIsNotNone(self.config.SPOTIFY_CLIENT_ID)
+        self.assertIsNotNone(self.config.SPOTIFY_CLIENT_SECRET)
+
+        self.assertIsNotNone(self.config.SPOTIFY_AUTH_TOKEN)
+        self.assertIsNotNone(self.config.SPOTIFY_REQ_HEADERS)
+        self.assertIsNotNone(self.config.SPOTIFY_ACCOUNT_URL)
+        self.assertIsNotNone(self.config.SPOTIFY_API_URL)
+        
+
 
 if __name__ == "__main__":
     unittest.main()
