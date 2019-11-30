@@ -37,13 +37,26 @@ class TestUsers(unittest.TestCase):
     
     def testPutUser(self):
         self.test_user_data = {
-            "user_id": 1,
+            "user_id": "1",
             "user_name": "test",
             "profile_pic_url": "none",
             "auth_token": "none"
         }
         response = self.client.put(path="/api/users", data=self.test_user_data)
         self.assertEqual(response.status_code, 204)
+
+class TestTrack(unittest.TestCase):
+    """
+    Tests the track API endpoints.
+    """
+    def setUp(self):
+        self.app = app
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+    
+    def testGetTrack(self):
+        response = self.client.get("/api/track/1LeItUMezKA1HdCHxYICed")
+        self.assertEqual(response.status_code, 404)
 
 # class TestSpotifyAPI(unittest.TestCase):
 #     """
