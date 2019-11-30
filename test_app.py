@@ -3,6 +3,7 @@ import unittest
 from flask import Flask
 
 from app import app
+from classes.spotify_helper import SpotifyHelper
 
 class TestApp(unittest.TestCase):
     """
@@ -24,16 +25,35 @@ class TestApp(unittest.TestCase):
         """
         response = self.client.get(path="/")
         self.assertEqual(response.status_code, 200)
-
-class TestSpotifyAPI(unittest.TestCase):
+    
+class TestUsers(unittest.TestCase):
     """
-    This class runs unit tests for the Spotify API calls
+    Tests the users endpoints.
     """
     def setUp(self):
-        self.spotify_helper = None
+        self.app = app
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
     
-    def test_configured(self):
-        self.assertIsNotNone(self.spotify_helper.client_secret)
+    def testPutUser(self):
+        self.test_user_data = {
+            "user_id": 1,
+            "user_name": "test",
+            "profile_pic_url": "none",
+            "auth_token": "none"
+        }
+        response = self.client.put(path="/api/users", data=self.test_user_data)
+        self.assertEqual(response.status_code, 204)
+
+# class TestSpotifyAPI(unittest.TestCase):
+#     """
+#     This class runs unit tests for the Spotify API calls
+#     """
+#     def setUp(self):
+#         pass
+    
+#     def test_configured(self):
+#         pass
 
 if __name__ == "__main__":
     print("Starting unit tests")
