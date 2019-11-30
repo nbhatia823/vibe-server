@@ -36,4 +36,6 @@ class TestSpotifyAPI(unittest.TestCase):
         self.assertIsNotNone(self.spotify_helper.client_secret)
 
 if __name__ == "__main__":
+    print("Starting unit tests")
     unittest.main()
+    print("Finished unit tests")
