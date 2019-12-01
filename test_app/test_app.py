@@ -58,7 +58,7 @@ class TestTrack(unittest.TestCase):
         response = self.client.get("/api/track/1LeItUMezKA1HdCHxYICed")
         self.assertEqual(response.status_code, 200)
 
-# if __name__ == "__main__":
-#     print("Starting unit tests")
-#     unittest.main()
-#     print("Finished unit tests")
+if __name__ == "__main__":
+    print("Starting unit tests")
+    unittest.main()
+    print("Finished unit tests")
