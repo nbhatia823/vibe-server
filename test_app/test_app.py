@@ -58,17 +58,7 @@ class TestTrack(unittest.TestCase):
         response = self.client.get("/api/track/1LeItUMezKA1HdCHxYICed")
         self.assertEqual(response.status_code, 200)
 
-# class TestSpotifyAPI(unittest.TestCase):
-#     """
-#     This class runs unit tests for the Spotify API calls
-#     """
-#     def setUp(self):
-#         pass
-    
-#     def test_configured(self):
-#         pass
-
-if __name__ == "__main__":
-    print("Starting unit tests")
-    unittest.main()
-    print("Finished unit tests")
+# if __name__ == "__main__":
+#     print("Starting unit tests")
+#     unittest.main()
+#     print("Finished unit tests")
