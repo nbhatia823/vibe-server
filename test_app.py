@@ -56,7 +56,7 @@ class TestTrack(unittest.TestCase):
     
     def testGetTrack(self):
         response = self.client.get("/api/track/1LeItUMezKA1HdCHxYICed")
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
 
 # class TestSpotifyAPI(unittest.TestCase):
 #     """
