@@ -3,7 +3,6 @@ import unittest
 from flask import Flask
 
 from app import app
-from classes.spotify_helper import SpotifyHelper
 
 class TestApp(unittest.TestCase):
     """
