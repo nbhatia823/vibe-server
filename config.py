@@ -1,5 +1,6 @@
 import os
 import requests
+import time
 
 
 class Config:
@@ -12,6 +13,8 @@ class Config:
     SPOTIFY_CLIENT_ID = '5ae1d35a487842fcbef9cb7f164ec3fb'
     SPOTIFY_CLIENT_SECRET = 'c27f32c0e5f04c2e989acc4c05097ba5'
     SPOTIFY_AUTH_TOKEN = ''
+    SPOTIFY_AUTH_TOKEN_CREATION_TIME = None
+    SPOTIFY_AUTH_TOKEN_REFRESH_TIME = 3600
     SPOTIFY_REQ_HEADERS = {
         'accept': "application/json",
         'content-type': "application/json",
@@ -28,4 +31,5 @@ class Config:
                          Config.SPOTIFY_CLIENT_SECRET)
         resp = requests.post(url, data=body_params, auth=authorization)
         Config.SPOTIFY_AUTH_TOKEN = resp.json()["access_token"]
+        Config.SPOTIFY_AUTH_TOKEN_CREATION_TIME = time.time()
         Config.SPOTIFY_REQ_HEADERS['authorization'] = f'Bearer {Config.SPOTIFY_AUTH_TOKEN}'
