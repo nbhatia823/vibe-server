@@ -41,7 +41,8 @@ class TestUsers(unittest.TestCase):
             "profile_pic_url": "none",
             "auth_token": "none"
         }
-        response = self.client.put(path="/api/users", data=self.test_user_data)
+        response = self.client.put(path="/api/users", content_type='application/json',
+        data=json.dumps(self.test_user_data))
         self.assertEqual(response.status_code, 204)
 
 class TestTrack(unittest.TestCase):
