@@ -66,8 +66,9 @@ class TestUsers(unittest.TestCase):
         user_data = {
             "user_id": "2"
         }
-        response = self.client.put(path="/api/users", content_type='application/json', data=user_data)
-        self.assertEquals(response.status_code, 400)
+        response = self.client.put(path="/api/users", content_type='application/json',
+         data=json.dumps(user_data))
+        self.assertEqual(response.status_code, 400)
     
     def testNegativeDelete(self):
         """Tests a failed delete
@@ -98,10 +99,11 @@ class TestTrack(unittest.TestCase):
             "track_id": "xy",
             "track_name": "test",
             "artist_name": "test",
-            "album_art_url": "test",
+            "album_art_url": "{\"test\":\"\"url\"}",
             "sentiment_score": 1.0
         }
-        response = self.client.post(path="/api/track", data=track_data, content_type='application/json')
+        response = self.client.post(path="/api/track", 
+        data=json.dumps(track_data), content_type='application/json')
         self.assertEqual(response.status_code, 201)
         response = self.client.get(path="/api/track/xy")
         self.assertEqual(response.status_code, 200)
