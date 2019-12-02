@@ -63,7 +63,10 @@ class TestUsers(unittest.TestCase):
     def testNegativePut(self):
         """Tests a failed PUT
         """
-        response = self.client.put(path="/api/users")
+        user_data = {
+            "user_id": "2"
+        }
+        response = self.client.put(path="/api/users", content_type='application/json', data=user_data)
         self.assertEquals(response.status_code, 400)
     
     def testNegativeDelete(self):
@@ -98,7 +101,7 @@ class TestTrack(unittest.TestCase):
             "album_art_url": "test",
             "sentiment_score": 1.0
         }
-        response = self.client.post(path="/api/track", data=track_data)
+        response = self.client.post(path="/api/track", data=track_data, content_type='application/json')
         self.assertEqual(response.status_code, 201)
         response = self.client.get(path="/api/track/xy")
         self.assertEqual(response.status_code, 200)
@@ -106,12 +109,32 @@ class TestTrack(unittest.TestCase):
         self.assertEqual(response.status_code, 204)
 
     def testNegativePostTrack(self):
-        response = self.client.post(path="/api/track/1")
+        response = self.client.post(path="/api/track")
         self.assertEqual(response.status_code, 400)
     
     def testNegativeDeleteTrack(self):
         response = self.client.delete(path="/api/track/xy")
         self.assertEqual(response.status_code, 400)
+
+class TestUserPosts(unittest.TestCase):
+    """
+    Tests the endpoints for UserPosts.
+    """
+    def setUp(self):
+        self.app = app
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+
+class TestFriends(unittest.TestCase):
+    """
+    Tests the endpoints for Friends.
+    """
+    def setUp(self):
+        self.app = app
+        self.app.config['TESTING'] = True
+        self.client = self.app.test_client()
+
+
 
 if __name__ == "__main__":
     print("Starting unit tests")
