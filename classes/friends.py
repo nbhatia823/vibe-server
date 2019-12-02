@@ -55,3 +55,10 @@ def delete_friend(user_id, friend_id):
         return True
     except:
         return False
+
+
+def check_friendship(user_id, friend_id):
+    try:
+        return Friends.select().where(Friends.user_id == user_id, Friends.friend_id == friend_id).exists()
+    except:
+        False

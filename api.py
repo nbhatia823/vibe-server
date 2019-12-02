@@ -2,7 +2,7 @@ from flask import request, json, Response, Blueprint
 from classes.users import Users, get_user, update_user, delete_user, create_user
 from classes.track import Track, bulk_create_tracks, create_track, get_track, update_track, delete_track
 from classes.user_posts import UserPosts, get_all_user_posts, create_user_post, delete_current_user_posts, get_friends_posts
-from classes.friends import Friends, add_friend, delete_friend, get_friends
+from classes.friends import Friends, check_friendship, add_friend, delete_friend, get_friends
 from classes.search import Search
 from classes.spotify_helper import SpotifyHelper
 import sys
@@ -228,7 +228,7 @@ def get_friend_list_handler(user_id):
 @api_routes.route('/api/users/<user_id>/friends/<friend_id>', methods=['POST', 'DELETE'])
 def add_or_delete_friend_handler(user_id, friend_id):
     if request.method == 'POST':
-        if add_friend(user_id, friend_id):
+        if check_friendship(user_id, friend_id) or add_friend(user_id, friend_id):
             return Response(status=201)
         else:
             return Response(status=404)
