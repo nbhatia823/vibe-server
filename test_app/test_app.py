@@ -2,6 +2,7 @@ import json
 import unittest
 from flask import Flask
 
+sys.path.append(os.getcwd() + '/..')
 from app import app
 
 class TestApp(unittest.TestCase):
