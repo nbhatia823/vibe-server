@@ -103,15 +103,18 @@ def track_get_or_update_or_delete_handler(track_id):  # 'id' is string-type ?
 
     if request.method == 'GET':
         track_dict = get_track(track_id)
-        # if the track with given id exists, send it back as json;
-        if track_dict:
-            track_json = json.dumps(track_dict)
-            return Response(track_json,
-                            mimetype='application/json',
-                            status=200)
-        # else if not found, return 404 code saying not found
-        else:
-            return Response(status=404)
+        # If track not in db, get info from spotify
+        if not track_dict:
+            # Get track info and add to DB
+            track_dict = SpotifyHelper.get_track_by_id(track_id)
+            if track_dict:
+                create_track(track_dict)
+            else:
+                # Not a valid track id, not found
+                return Response(status=404)
+        return Response(json.dumps(track_dict),
+                        mimetype='application/json',
+                        status=200)
 
     elif request.method == 'PUT':
         track_field_mappings = get_json_body_from_current_request()
@@ -163,8 +166,8 @@ def post_track_of_day_handler(user_id, track_id):
                 if track:
                     create_track(track)
                 else:
-                    # Not a valid track id, Bad Request
-                    return Response(status=400)
+                    # Not a valid track id, not found
+                    return Response(status=404)
 
             # Create new user post
             rows_updated = create_user_post(new_user_post)
@@ -246,7 +249,7 @@ def get_track_sentiment_handler(track_id):
             if track:
                 create_track(track)
             else:
-                # Not a valid track id
+                # Not a valid track id, not found
                 return Response(status=404)
         # Limit fields sent back to requester
         track = {

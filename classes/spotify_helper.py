@@ -1,6 +1,7 @@
 
 import requests
 from config import Config
+import time
 
 """
 Helper class for all Spotify API queries
@@ -13,7 +14,13 @@ https://developer.spotify.com/documentation/general/guides/authorization-guide/#
 class SpotifyHelper:
 
     @staticmethod
+    def ensureValidAuthToken():
+        if time.time() - Config.SPOTIFY_AUTH_TOKEN_REFRESH_TIME > Config.SPOTIFY_AUTH_TOKEN_CREATION_TIME:
+            Config.setAuthToken()
+
+    @staticmethod
     def search_spotify(query):
+        SpotifyHelper.ensureValidAuthToken()
         query.replace(" ", "%20")
         url = f'{Config.SPOTIFY_API_URL}/v1/search?q={query}&type=track&limit=4'
         resp = requests.get(url, headers=Config.SPOTIFY_REQ_HEADERS)
@@ -21,6 +28,7 @@ class SpotifyHelper:
 
     @staticmethod
     def get_track_sentiment_score(track_id):
+        SpotifyHelper.ensureValidAuthToken()
         url = f'{Config.SPOTIFY_API_URL}/v1/audio-features/' + str(track_id)
         resp = requests.get(url, headers=Config.SPOTIFY_REQ_HEADERS)
         if resp.status_code == 400:
@@ -30,6 +38,7 @@ class SpotifyHelper:
 
     @staticmethod
     def get_track_by_id(track_id):
+        SpotifyHelper.ensureValidAuthToken()
         url = f'{Config.SPOTIFY_API_URL}/v1/tracks/' + str(track_id)
         resp = requests.get(url, headers=Config.SPOTIFY_REQ_HEADERS)
         if resp.status_code == 400:

@@ -14,7 +14,6 @@ app.config['WTF_CSRF_ENABLED'] = False
 
 # SET AUTH TOKEN AND REFRESH EVERY 3600 seconds
 Config.setAuthToken()
-threading.Timer(3600, Config.setAuthToken).start()
 
 
 @app.route("/")
