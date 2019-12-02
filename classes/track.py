@@ -34,11 +34,11 @@ def get_track(track_id):
 
 
 def create_track(track_field_mappings):
-    try:
-        return Track.insert(**track_field_mappings).execute()
+    # try:
+    return Track.insert(**track_field_mappings).execute()
     # in case of incorrect track field mapping
-    except:
-        return -1
+    # except:
+        # return -1
 
 
 # Create tracks for each set of provided fields
@@ -67,4 +67,7 @@ def update_track(track_id, track_field_mappings):
 # Args: track_id (int of track_id)
 # Return: Number of rows deleted
 def delete_track(track_id):
-    return Track.delete().where(Track.track_id == track_id).execute()
+    try:
+        return Track.delete().where(Track.track_id == track_id).execute()
+    except:
+        return -1

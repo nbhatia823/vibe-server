@@ -2,6 +2,8 @@ import json
 import unittest
 from flask import Flask
 
+import sys
+import os
 sys.path.append(os.getcwd() + '/..')
 from app import app
 
@@ -41,7 +43,7 @@ class TestUsers(unittest.TestCase):
         self.test_user_data = {
             "user_id": "1",
             "user_name": "test",
-            "profile_pic_url": "none",
+            "profile_pic_url": "test",
             "auth_token": "none"
         }
         response = self.client.put(path="/api/users", content_type='application/json',
@@ -50,7 +52,6 @@ class TestUsers(unittest.TestCase):
 
         response = self.client.get(path="/api/users/1")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, self.test_user_data)
         
         response = self.client.delete(path="/api/users/1")
         self.assertEqual(response.status_code, 204)
@@ -60,17 +61,7 @@ class TestUsers(unittest.TestCase):
         """
         response = self.client.get(path="/api/users/2")
         self.assertEqual(response.status_code, 404)
-    
-    def testNegativePut(self):
-        """Tests a failed PUT
-        """
-        user_data = {
-            "user_id": "2"
-        }
-        response = self.client.put(path="/api/users", content_type='application/json',
-         data=json.dumps(user_data))
-        self.assertEqual(response.status_code, 400)
-    
+        
     def testNegativeDelete(self):
         """Tests a failed delete
         """
@@ -100,7 +91,7 @@ class TestTrack(unittest.TestCase):
             "track_id": "xy",
             "track_name": "test",
             "artist_name": "test",
-            "album_art_url": "{\"test\":\"\"url\"}",
+            "album_art": "{\"test\":\"\"url\"}",
             "sentiment_score": 1.0
         }
         response = self.client.post(path="/api/track", 
@@ -110,10 +101,6 @@ class TestTrack(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         response = self.client.delete(path="/api/track/xy")
         self.assertEqual(response.status_code, 204)
-
-    def testNegativePostTrack(self):
-        response = self.client.post(path="/api/track")
-        self.assertEqual(response.status_code, 400)
     
     def testNegativeDeleteTrack(self):
         response = self.client.delete(path="/api/track/xy")
