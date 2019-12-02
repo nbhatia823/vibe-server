@@ -145,6 +145,34 @@ class TestFriends(unittest.TestCase):
         self.app.config['TESTING'] = True
         self.client = self.app.test_client()
 
+    def testFriends(self):
+        self.test_user_data = {
+            "user_id": "y10",
+            "user_name": "test",
+            "profile_pic_url": "test",
+            "auth_token": "none"
+        }
+        response = self.client.put(path="/api/users", content_type='application/json',
+        data=json.dumps(self.test_user_data))
+        self.assertEqual(response.status_code, 204)
+        
+        self.test_user_data["user_id"] = "y120"
+        response = self.client.put(path="/api/users", content_type='application/json',
+        data=json.dumps(self.test_user_data))
+        self.assertEqual(response.status_code, 204)
+
+        response = self.client.post(path="/api/users/y10/friends/y120")
+        self.assertEqual(response.status_code, 201)
+
+        response = self.client.delete(path="/api/users/y10/friends/y120")
+        self.assertEqual(response.status_code, 204)
+
+        response = self.client.delete(path="/api/users/y10")
+        self.assertEqual(response.status_code, 204)
+        response = self.client.delete(path="/api/users/y120")
+        self.assertEqual(response.status_code, 204)
+
+
 
 
 if __name__ == "__main__":
