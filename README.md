@@ -15,7 +15,9 @@ Run `pip install -r requirements.txt` to get the packages.
 
 The Spotify API configuration is in spotify_helper.py.
 
-
 Example API endpoints
 https://vibe-web-api.herokuapp.com/api/users/32141344324
 https://vibe-web-api.herokuapp.com/api/track/134124123
+
+### Deployment
+To run the Flask app, use the command `flask run` with this code on a server.

@@ -30,23 +30,22 @@ def get_user(user_id):
 
 
 def create_user(user_field_mappings):
-    # try:
-    return Users.insert(**user_field_mappings).execute()
+    try:
+        return Users.insert(**user_field_mappings).execute()
     # in case of incorrect user field mapping
-    # except:
-    #     return -1
+    except:
+        return -1
 
 
 # Updates user using field_mapping
 # Args: user_id (string/int of user_id), User_fields (dictionary- key = field, value = field_value)
 # Return: Number of rows updated, -1 if error
 def update_user(user_id, user_field_mappings):
-    # try:
-    return Users.update(**user_field_mappings).where(Users.user_id == user_id).execute()
+    try:
+        return Users.update(**user_field_mappings).where(Users.user_id == user_id).execute()
     # in case of incorrect user field mapping
-
-    # except:
-    #     return -1
+    except:
+        return -1
 
 # Deletes a user using id
 # Args: user_id (string/int of user_id)
